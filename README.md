@@ -202,17 +202,14 @@ display.clearDisplay() clear display every cycle.
 void display_data()
 {
     display.clearDisplay();
-    display.drawBitmap(0,0,HOME,128,64,SSD1306_WHITE);
-
-  
-			if(data.sw1 == LOW)
-      {
-				display.drawBitmap( 92, 45,DIGI_CLICKED, 10,10,SSD1306_WHITE );   
-			}
-			
-			if(data.sw2 == LOW)
-      {
-				display.drawBitmap( 110,45,DIGI_CLICKED, 10, 10, SSD1306_WHITE);
+    display.drawBitmap(0,0,HOME,128,64,SSD1306_WHITE);  
+    if(data.sw1 == LOW)
+    {
+        display.drawBitmap( 92, 45,DIGI_CLICKED, 10,10,SSD1306_WHITE );   
+    }
+    if(data.sw2 == LOW)
+     {
+        display.drawBitmap( 110,45,DIGI_CLICKED, 10, 10, SSD1306_WHITE);
       }
 			
       display.setTextSize(1); // Draw 2X-scale text
