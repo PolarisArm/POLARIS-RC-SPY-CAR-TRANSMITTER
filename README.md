@@ -15,14 +15,17 @@ __SPECIFICATION__
 - MICROCONTROLLER: ATMEGA328P
 - RF TRANSRECIVER: NRF24L01-PA-LNA
 - DISPLAY: SSD1315 0.96inch OLED DISPLAY
+  
 __QUICK WORD FOR NRF24L01__
-NRF24L01 is single chip 2.4Ghz transceiver<br>
-It operates on 2.4Ghz ISM band and have data speed upto 2mbps.
-This communicates via SPI pins with the processore. Most important is
-all of its pin is 5v tolerant but not the Vcc pin.Vcc pin have maximum 3.3v-3.4v input.
-In this project we use slightly upgaraded version of nrf24l01 which is nrf24l01+.
-Our module have one extra important feature which is the power amplifier.This amplifier
-extends our module range upto 2KM !!!.
+
+NRF24L01 is a single-chip 2.4GHz transceiver<br>
+It operates in the 2.4 GHz ISM band and offers data rates up to __2 Mbit/s__.<br>
+This chip communicates with the processor through SPI pins.<br>
+All pins are 5V tolerant (this is the most important feature), but the Vcc pin is not. The maximum voltage on the Vcc pin is limited to 3.3V to 3.4V as an input.<br>
+This project uses a slightly updated version of nrf24l01, namely nrf24l01+.<br>
+A key aspect of our module is the power amplifier, which is an important feature.<br>
+This increases the module's coverage up to __2 km__.<br>
+
 _______________________________________________________________________________________
 ## INCLUDE LIBRARIES TO YOUR ARDUINO SKETCH
 __Adafruit GFX LIBRARY__ : https://github.com/adafruit/Adafruit-GFX-Library.git <br>
