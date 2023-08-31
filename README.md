@@ -2,6 +2,28 @@
 ## A TRANSMITTER FOR POLARIS RC SPY CAR.
 ![WhatsApp Image 2023-08-31 at 00 55 54](https://github.com/PolarisArm/POLARIS-RC-SPY-CAR-TRANSMITTER/assets/143507006/1f2548b6-76d2-43db-af35-4ecafd60dd1a)
 
+__THIS TRANSMITTER HAVE 6 ANALOG CHANNEL AND 2 DIGITAL CHANNEL__
+* 4 OF THE ANALOG CHANNEL ARE BEING USED BY JOYSTICK.
+* 2 OF ANALOG CHANNEL USED BY TWO POTENTIOMETER.
+* REMAINING TWO CHANNEL IS USED BY TWO DIGITAL SWITCH.JUST ON AND OFF (DIGITAL)
+THIS TRANSMITTER INTENDED TO BE USED IN RC CAR, BOAT AND HOBBY AEROPLANE, DRONE(CAN BE USED, BUT NOT RECOMENDED)
+
+__SPECIFICATION__
+- OPERATING VOLTAGE - 5.0v FOR ALL SYSTEM AND 3.3v FOR NRF24L01-PA-LNA
+- INPUT VOLTAGE: > 6.5v BUT NOT MORE THAN 9v.
+- POWER SOURCE:  2X 18650 Li-ION BATTERY IN SERIES PROVIDING 8.4v MAX.
+- MICROCONTROLLER: ATMEGA328P
+- RF TRANSRECIVER: NRF24L01-PA-LNA
+- DISPLAY: SSD1315 0.96inch OLED DISPLAY
+__QUICK WORD FOR NRF24L01__
+NRF24L01 is single chip 2.4Ghz transceiver<br>
+It operates on 2.4Ghz ISM band and have data speed upto 2mbps.
+This communicates via SPI pins with the processore. Most important is
+all of its pin is 5v tolerant but not the Vcc pin.Vcc pin have maximum 3.3v-3.4v input.
+In this project we use slightly upgaraded version of nrf24l01 which is nrf24l01+.
+Our module have one extra important feature which is the power amplifier.This amplifier
+extends our module range upto 2KM !!!.
+_______________________________________________________________________________________
 ## INCLUDE LIBRARIES TO YOUR ARDUINO SKETCH
 __Adafruit GFX LIBRARY__ : https://github.com/adafruit/Adafruit-GFX-Library.git <br>
 __Adafruit SSD1306__ : https://github.com/adafruit/Adafruit_SSD1306.git <br>
@@ -54,3 +76,102 @@ __NOW INITIALIZE RADIO MODULE__
 const uint64_t address = 0XE8E8F0F0E1LL; //This address will be same in reciver
 RF24 radio(CE,CSN);
 ```
+__Make a struct to send data throug radio__
+```C++
+struct CHANNEL_DATA{
+  byte throttle;
+  byte yaw;
+  byte roll;
+  byte pitch;
+  byte pot1;
+  byte pot2;
+  byte sw1;
+  byte sw2;
+};
+
+CHANNEL_DATA data; //Initializing struct
+```
+In the void setup() section Initialize the radio.
+```C++
+if (!radio.begin()) {
+    Serial.println(F("radio hardware is not responding!!"));
+    while (1) {}  // hold in infinite loop
+  }
+  radio.setDataRate(RF24_250KBPS); // Data sending speed
+  radio.setPALevel(RF24_PA_MAX);  // Setting Rf power to max as it will communicate in long distance.
+  radio.openWritingPipe(address); // Opening the pipe , in which reciver is listening
+  radio.stopListening(); // Because We are transmiting, why should we listen.
+```
+
+__Initializing struct with some default value__
+```C++
+  data.throttle = 127;
+  data.yaw      = 127;
+  data.roll     = 127;
+  data.pitch    = 127;
+  data.pot1     = 127;
+  data.pot2     = 127;
+  data.sw1      = 0;
+  data.sw2      = 0;
+  ```
+__Initializing screen and showing welcome screen and Home screen__
+```C++
+  display.setRotation(2); // We are using this command as our display is upside down.
+
+  if(!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
+    Serial.println(F("SSD1306 allocation failed"));
+    for(;;); // Don't proceed, loop forever
+  }
+  display.clearDisplay();
+  delay(100); 
+  display.clearDisplay();
+  display.drawBitmap(0,0,WELCOME_SCREEN,128,64,SSD1306_WHITE);
+  display.display();
+  delay(500); // Showing Welcome screen for 500ms 
+  display.clearDisplay();
+```
+__Loop Section__
+Just call these three function one after another.<br>
+First send data through rf, using radio.write() command.<br>
+```C++
+void loop() {
+  send_data(); // Sending data through radio
+  display_data();  // displaying data in the display
+  delayMicroseconds(100); // delay for 100 us
+}
+```
+__Send Data Function__
+As we are using byte for our variable we cannot use 10 bit data(0-1023),<br>
+because byte is 8bit(0-255).So we have to map our analog read value from<br>
+0 - 1023 to 0 - 255.<br>
+> A byte stores an 8-bit unsigned number, from 0 to 255.
+
+For this we use arduino map function.
+```C++
+map(value, fromLow, fromHigh, toLow, toHigh)
+```
+Parameters:
+  * value: the number to map.
+  * fromLow: the lower bound of the value’s current range.
+  * fromHigh: the upper bound of the value’s current range.
+  * toLow: the lower bound of the value’s target range.
+  * toHigh: the upper bound of the value’s target range.
+```C++
+void send_data()
+{
+  data.throttle = map(analogRead(THROTTLE),0,1023,0,255);
+  data.yaw      = map(analogRead(YAW)     ,0,1023,0,255);
+  data.roll     = map(analogRead(ROLL)    ,0,1023,0,255);
+  data.pitch    = map(analogRead(PITCH)   ,0,1023,0,255);
+  data.pot1     = map(analogRead(POT1)    ,0,1023,0,255);  
+  data.pot2     = map(analogRead(POT2)    ,0,1023,0,255);
+  data.sw1      = digitalRead(SW1);
+  data.sw2      = digitalRead(SW2);
+  radio.write(&data,sizeof(CHANNEL_DATA));
+ // Serial.println("SENT DATA");
+}
+```
+
+
+
+
