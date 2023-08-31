@@ -61,6 +61,7 @@ Pitch(Up & Down) & Roll(Left & Right) is first joystick(Left).<br>
 Two potentiometer is POT1 & POT2. Two toggle switch is SW1(Left) & SW2(Right).<br>
 
 __Now Initiate (0.96 inch) SSD1315 OLED DISPLAY__
+
 This screen communicate atmega328p via I2C protocol.<br?
 I2C pin <br>
 * SCL A5 <br>
@@ -77,11 +78,13 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT);
 > USE 0x3C for Screen address, Unless it will not work.<br>
 
 __NOW INITIALIZE RADIO MODULE__
+
 ```C++
 const uint64_t address = 0XE8E8F0F0E1LL; //This address will be same in reciver
 RF24 radio(CE,CSN);
 ```
 __Make a struct to send data through radio__
+
 ```C++
 struct CHANNEL_DATA{
   byte throttle;
@@ -109,6 +112,7 @@ if (!radio.begin()) {
 ```
 
 __Initializing struct with some default value__
+
 ```C++
   data.throttle = 127;
   data.yaw      = 127;
@@ -120,6 +124,7 @@ __Initializing struct with some default value__
   data.sw2      = 0;
   ```
 __Initializing screen and showing welcome screen and Home screen__
+
 ```C++
   display.setRotation(2); // We are using this command as our display is upside down.
 
@@ -136,6 +141,7 @@ __Initializing screen and showing welcome screen and Home screen__
   display.clearDisplay();
 ```
 __Loop Section__
+
 Just call these three function one after another.<br>
 First send data through rf, using radio.write() command.<br>
 ```C++
@@ -146,6 +152,7 @@ void loop() {
 }
 ```
 __Send Data Function__
+
 As we are using byte for our variable we cannot use 10 bit data(0-1023),<br>
 because byte is 8bit(0-255).So we have to map our analog read value from<br>
 0 - 1023 to 0 - 255.<br>
@@ -178,6 +185,7 @@ void send_data()
 ```
 
 __SHOWING DATA IN THE DISPLAY__
+
 HERE we use draw bitmap function from adafuit gfx library to draw the Home screen.
 ```C++
 void Adafruit_GFX::drawBitmap	(	int16_t 	x, int16_t 	y, const uint8_t 	bitmap[], int16_t 	w, int16_t 	h, uint16_t 	color )
