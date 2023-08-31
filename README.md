@@ -14,7 +14,7 @@ __SPECIFICATION__
 - POWER SOURCE:  2X 18650 Li-ION BATTERY IN SERIES PROVIDING 8.4v MAX.
 - MICROCONTROLLER: ATMEGA328P
 - RF TRANSRECIVER: NRF24L01-PA-LNA
-- DISPLAY: SSD1315 0.96inch OLED DISPLAY
+- DISPLAY: SSD1315 0.96inch MONOCHROME OLED DISPLAY 
   
 __QUICK WORD FOR NRF24L01__
 
@@ -79,7 +79,7 @@ __NOW INITIALIZE RADIO MODULE__
 const uint64_t address = 0XE8E8F0F0E1LL; //This address will be same in reciver
 RF24 radio(CE,CSN);
 ```
-__Make a struct to send data throug radio__
+__Make a struct to send data through radio__
 ```C++
 struct CHANNEL_DATA{
   byte throttle;
@@ -103,7 +103,7 @@ if (!radio.begin()) {
   radio.setDataRate(RF24_250KBPS); // Data sending speed
   radio.setPALevel(RF24_PA_MAX);  // Setting Rf power to max as it will communicate in long distance.
   radio.openWritingPipe(address); // Opening the pipe , in which reciver is listening
-  radio.stopListening(); // Because We are transmiting, why should we listen.
+  radio.stopListening(); // Because We are transmitting, why should we listen.
 ```
 
 __Initializing struct with some default value__
@@ -170,11 +170,29 @@ void send_data()
   data.pot2     = map(analogRead(POT2)    ,0,1023,0,255);
   data.sw1      = digitalRead(SW1);
   data.sw2      = digitalRead(SW2);
-  radio.write(&data,sizeof(CHANNEL_DATA));
+  radio.write(&data,sizeof(CHANNEL_DATA)); // here size of gives total size of the data to function.
  // Serial.println("SENT DATA");
 }
 ```
 
+__SHOWING DATA IN THE DISPLAY__
+HERE we use draw bitmap function from adafuit gfx library to draw the Home screen.
+```C++
+void Adafruit_GFX::drawBitmap	(	int16_t 	x, int16_t 	y, const uint8_t 	bitmap[], int16_t 	w, int16_t 	h, uint16_t 	color )
+```
+Parameters:
+  - Top left corner x coordinate
+  - y	Top left corner y coordinate
+  - bitmap	byte array with monochrome bitmap
+  - w	Width of bitmap in pixels
+  - h	Height of bitmap in pixels
+  - color SSD1306_WHITE and SSD1306_BLACK
 
+To show changing data on the display we use this steps
+```C++
+      display.setTextSize(1); // First, give this function the text size you want
+      display.setTextColor(SSD1306_WHITE); // Add color to your text by using this function. This is a monochrome (black and white two-color) display, so it might just be white here.
+      display.setCursor(24,4); // set the position of your text(X,Y)
+```
 
 
