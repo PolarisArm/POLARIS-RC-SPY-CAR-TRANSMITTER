@@ -23,7 +23,7 @@
 #define SCREEN_HEIGHT 64 // OLED display height, in pixels
 
 #define OLED_RESET     -1 // Reset pin # (or -1 if sharing Arduino reset pin)
-#define SCREEN_ADDRESS 0x3C ///< See datasheet for Address; 0x3D for 128x64, 0x3C for 128x32
+#define SCREEN_ADDRESS 0x3C /// 0x3C for 128x64
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT);
 
 const unsigned char WELCOME_SCREEN [] PROGMEM = {
@@ -168,14 +168,9 @@ const unsigned char DIGI_CLICKED [] PROGMEM = {
 
 unsigned long previousCurrentTime = 0,previousTime = 0;
 
-
 const uint64_t address = 0XE8E8F0F0E1LL;
 
-double RECIVER_BATTERY = 0.00;
-
 RF24 radio(CE,CSN);
-
-
 
 struct CHANNEL_DATA{
   byte throttle;
@@ -270,14 +265,14 @@ void display_data()
     display.drawBitmap(0,0,HOME,128,64,SSD1306_WHITE);
 
   
-			if(data.sw1 == LOW)
+	if(data.sw1 == LOW)
       {
-				display.drawBitmap( 92, 45,DIGI_CLICKED, 10,10,SSD1306_WHITE );   
-			}
+	display.drawBitmap( 92, 45,DIGI_CLICKED, 10,10,SSD1306_WHITE );   
+      }
 			
-			if(data.sw2 == LOW)
+     if(data.sw2 == LOW)
       {
-				display.drawBitmap( 110,45,DIGI_CLICKED, 10, 10, SSD1306_WHITE);
+	display.drawBitmap( 110,45,DIGI_CLICKED, 10, 10, SSD1306_WHITE);
       }
 			
       display.setTextSize(1); // Draw 2X-scale text
