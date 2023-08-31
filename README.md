@@ -25,6 +25,8 @@ All pins are 5V tolerant (this is the most important feature), but the Vcc pin i
 This project uses a slightly updated version of nrf24l01, namely nrf24l01+.<br>
 A key aspect of our module is the power amplifier, which is an important feature.<br>
 This increases the module's coverage up to __2 km__.<br>
+![Pinout-nRF24L01-PA-LNA-External-Antenna-Wireless-Transceiver-Module](https://github.com/PolarisArm/POLARIS-RC-SPY-CAR-TRANSMITTER/assets/143507006/cbc749cd-d22b-40e8-ab05-68af53f28229)
+
 
 _______________________________________________________________________________________
 ## INCLUDE LIBRARIES TO YOUR ARDUINO SKETCH
@@ -195,4 +197,47 @@ To show changing data on the display we use this steps
       display.setCursor(24,4); // set the position of your text(X,Y)
 ```
 
+display.clearDisplay() clear display every cycle.
+```C++
+void display_data()
+{
+    display.clearDisplay();
+    display.drawBitmap(0,0,HOME,128,64,SSD1306_WHITE);
 
+  
+			if(data.sw1 == LOW)
+      {
+				display.drawBitmap( 92, 45,DIGI_CLICKED, 10,10,SSD1306_WHITE );   
+			}
+			
+			if(data.sw2 == LOW)
+      {
+				display.drawBitmap( 110,45,DIGI_CLICKED, 10, 10, SSD1306_WHITE);
+      }
+			
+      display.setTextSize(1); // Draw 2X-scale text
+      display.setTextColor(SSD1306_WHITE);
+      display.setCursor(24,4);
+      display.print(data.throttle); 
+      display.setCursor(24,13);
+      display.print(data.yaw);
+      display.setCursor(24,22);
+      display.print(data.roll);
+      display.setCursor(24,31);
+      display.print(data.pitch);
+      display.setCursor(24,40);
+      display.print(data.pot1);
+      display.setCursor(24,49);
+      display.print(data.pot2);
+      display.display();  
+}
+```
+##Now you may be asking how can get image to this code.
+
+First create and draw or resize exsisting image in photoshop or ms-paint size will be 
+  - Width: 128px
+  - Height: 64px
+    
+Then go to this website upload your image and convert it to c code.<br>
+__Link:__ https://javl.github.io/image2cpp/  <br>
+Just copy image function and add it to your code.<br>
