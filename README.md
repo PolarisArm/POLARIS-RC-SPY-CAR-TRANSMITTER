@@ -19,8 +19,8 @@ __SPECIFICATION__
 __QUICK WORD FOR NRF24L01__
 
 NRF24L01 is a single-chip 2.4GHz transceiver<br>
-It operates in the 2.4 GHz ISM band and offers data rates up to __2 Mbit/s__.<br>
-This chip communicates with the processor through SPI pins.<br>
+It operates in the 2.4 GHz __ISM__ band and offers data rates up to __2 Mbit/s__.<br>
+This chip communicates with the processor through __SPI__ pins.<br>
 All pins are 5V tolerant (this is the most important feature), but the Vcc pin is not. The maximum voltage on the Vcc pin is limited to 3.3V to 3.4V as an input.<br>
 This project uses a slightly updated version of nrf24l01, namely nrf24l01+.<br>
 A key aspect of our module is the power amplifier, which is an important feature.<br>
@@ -55,7 +55,7 @@ __Now define this variable__
 #define ROCAL      8
 
 ```
-__CE(CLOCK ENABlE) & CSN(CHIP SELECT NOT)__ are SPI pin and for nrf24l01.<br>
+__CE(CHIP ENABlE) & CSN(CHIP SELECT NOT)__ are SPI pin and for nrf24l01.<br>
 Throttle(Up & Down) & Yaw(Left & Right) is first joystick(Left).<br>
 Pitch(Up & Down) & Roll(Left & Right) is first joystick(Left).<br>
 Two potentiometer is POT1 & POT2. Two toggle switch is SW1(Left) & SW2(Right).<br>
